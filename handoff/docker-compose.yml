@@ -1,0 +1,18 @@
+services:
+  mysql:
+    build: ./mysql
+    container_name: handoff-mysql
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Tokyo
+      MYSQL_DATABASE: handoff_app
+      MYSQL_USER: handoff_user
+      MYSQL_PASSWORD: handoff_pass
+      MYSQL_ROOT_PASSWORD: rootpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - handoff_mysql_data:/var/lib/mysql
+
+volumes:
+  handoff_mysql_data:
