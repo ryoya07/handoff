@@ -2,12 +2,17 @@ package com.example.handoff.domain.view;
 
 import java.time.LocalDateTime;
 
+import lombok.Data;
+
+@Data
 public class HandoffView {
 	private Long id;
 	private String title;
 	private String content;
 	private String createdByName;
 	private LocalDateTime createdAt;
+    private int readFlag;              // 0:未読 / 1:既読
+    private java.time.LocalDateTime readAt;      // 既読日時（未読ならnull）
 	
 	public Long getId() {
 		return id;
@@ -48,5 +53,22 @@ public class HandoffView {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	
+	public int getReadFlag() {
+		return readFlag;
+	}
+
+	public void setReadFlag(int readFlag) {
+		this.readFlag = readFlag;
+	}
+
+	public LocalDateTime getReadAt() {
+		return readAt;
+	}
+
+	public void setReadAt(LocalDateTime readAt) {
+		this.readAt = readAt;
+	}
+	
 
 }

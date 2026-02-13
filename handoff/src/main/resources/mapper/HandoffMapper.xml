@@ -6,14 +6,25 @@
 <mapper namespace="com.example.handoff.repository.HandoffMapper">
 
   <select id="selectAll" resultType="com.example.handoff.domain.view.HandoffView">
-    SELECT
-      h.id,
-      h.title,
-      h.content,
-      u.display_name AS createdByName,
-      h.created_at AS createdAt
-    FROM handoffs h
-    JOIN users u ON h.created_by = u.id
-    ORDER BY h.created_at DESC
-  </select>
+	  SELECT
+	    h.id,
+	    h.title,
+	    h.content,
+	    u.display_name AS createdByName,
+	    h.created_at AS createdAt,
+	    CASE WHEN r.read_at IS NULL THEN 0 ELSE 1 END AS readFlag,
+	    r.read_at AS readAt
+	  FROM handoffs h
+	  JOIN users u ON h.created_by = u.id
+	  LEFT JOIN handoff_reads r
+	    ON r.handoff_id = h.id
+	   AND r.user_id = #{loginUserId}
+	  ORDER BY h.created_at DESC
+</select>
+  
+  <insert id="insert">
+  	INSERT INTO handoffs (title, content, created_by)
+  	VALUES (#{title}, #{content}, #{createdBy})
+  </insert>
+  
 </mapper>
