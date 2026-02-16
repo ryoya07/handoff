@@ -19,5 +19,21 @@
 	  SELECT id
 	  FROM users
 	  WHERE login_id = #{loginId}
-  </select>  
+  </select> 
+  
+  <insert id="insertUser">
+	  INSERT INTO users (
+	    login_id,
+	    display_name,
+	    password_hash,
+	    created_at
+	  )
+	  VALUES (
+	    #{loginId},
+	    #{displayName},
+	    #{passwordHash},
+	    NOW()
+	  )
+  </insert>
+  
 </mapper>

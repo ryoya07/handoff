@@ -7,7 +7,12 @@ import com.example.handoff.domain.model.User;
 
 @Mapper
 public interface UserMapper {
-    User selectByLoginId(@Param("loginId") String loginId);
-    
-    Long selectIdByLoginId(@Param("loginId") String loginId);
+	Long selectIdByLoginId(@Param("loginId") String loginId);
+	User selectByLoginId(@Param("loginId") String loginId);
+
+    int insertUser(
+    	    @Param("loginId") String loginId,
+    	    @Param("displayName") String displayName,
+    	    @Param("passwordHash") String passwordHash
+    	);
 }
