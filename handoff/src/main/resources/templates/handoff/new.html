@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>引き継ぎ作成</title>
+</head>
+<body>
+  <h1>引き継ぎ作成</h1>
+
+  <form method="post" th:action="@{/handoff}">
+    <div>
+      <label>タイトル</label><br>
+      <input type="text" name="title" required>
+    </div>
+
+    <div>
+      <label>内容</label><br>
+      <textarea name="content" rows="8" cols="60" required></textarea>
+    </div>
+
+    <button type="submit">登録</button>
+  </form>
+
+  <p><a th:href="@{/handoff}">一覧へ戻る</a></p>
+</body>
+</html>
