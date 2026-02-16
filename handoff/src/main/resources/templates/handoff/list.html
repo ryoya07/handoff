@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <title>引き継ぎ一覧</title>
+<form th:action="@{/logout}" method="post" style="display:inline;">
+  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+  <button type="submit">ログアウト</button>
+</form>
 </head>
 <body>
 	<h1>引き継ぎ一覧</h1>
