@@ -67,4 +67,47 @@ public class HandoffController {
 		
 		return "redirect:/handoff";
 	}
+	
+	@GetMapping("/handoff/{id}/edit")
+	public String editForm(@PathVariable Long id, Model model, Authentication auth) {
+	    Long userId = userMapper.selectIdByLoginId(auth.getName());
+
+	    var handoff = handoffMapper.selectById(id);
+
+	    // サーバ側でも投稿者チェック（必須）
+	    if (handoff == null || !handoff.getCreatedBy().equals(userId)) {
+	        return "redirect:/handoff?forbidden";
+	    }
+
+	    model.addAttribute("handoff", handoff);
+	    return "handoff/edit";
+	}
+
+	@PostMapping("/handoff/{id}/edit")
+	public String update(
+	    @PathVariable Long id,
+	    @RequestParam String title,
+	    @RequestParam String content,
+	    Authentication auth
+	) {
+	    Long userId = userMapper.selectIdByLoginId(auth.getName());
+
+	    int updated = handoffMapper.updateByIdAndUserId(id, title, content, userId);
+	    if (updated == 0) {
+	        return "redirect:/handoff?forbidden";
+	    }
+	    return "redirect:/handoff";
+	}
+
+	@PostMapping("/handoff/{id}/delete")
+	public String delete(@PathVariable Long id, Authentication auth) {
+	    Long userId = userMapper.selectIdByLoginId(auth.getName());
+
+	    int deleted = handoffMapper.deleteByIdAndUserId(id, userId);
+	    if (deleted == 0) {
+	        return "redirect:/handoff?forbidden";
+	    }
+	    return "redirect:/handoff";
+	}
+
 }

@@ -22,9 +22,37 @@
 	  ORDER BY h.created_at DESC
 </select>
   
-  <insert id="insert">
-  	INSERT INTO handoffs (title, content, created_by)
-  	VALUES (#{title}, #{content}, #{createdBy})
-  </insert>
+<insert id="insert">
+	INSERT INTO handoffs (title, content, created_by)
+	VALUES (#{title}, #{content}, #{createdBy})
+</insert>
+  
+<select id="selectById" resultType="com.example.handoff.domain.HandoffEdit">
+  SELECT
+    id,
+    title,
+    content,
+    created_by AS createdBy,
+    created_at AS createdAt,
+    updated_at AS updatedAt
+  FROM handoffs
+  WHERE id = #{id}
+</select>
+
+<update id="updateByIdAndUserId">
+  UPDATE handoffs
+  SET
+    title = #{title},
+    content = #{content},
+    updated_at = NOW()
+  WHERE id = #{id}
+    AND created_by = #{userId}
+</update>
+
+<delete id="deleteByIdAndUserId">
+  DELETE FROM handoffs
+  WHERE id = #{id}
+    AND created_by = #{userId}
+</delete>
   
 </mapper>
