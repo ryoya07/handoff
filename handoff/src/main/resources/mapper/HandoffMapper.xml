@@ -10,6 +10,7 @@
 	    h.id,
 	    h.title,
 	    h.content,
+	    h.created_by AS createdById, 
 	    u.display_name AS createdByName,
 	    h.created_at AS createdAt,
 	    CASE WHEN r.read_at IS NULL THEN 0 ELSE 1 END AS readFlag,
@@ -54,5 +55,23 @@
   WHERE id = #{id}
     AND created_by = #{userId}
 </delete>
+
+<select id="selectByIdWithReadFlag" resultType="com.example.handoff.domain.view.HandoffView">
+  SELECT
+    h.id,
+    h.title,
+    h.content,
+    h.created_by AS createdById,
+    u.display_name AS createdByName,
+    h.created_at AS createdAt,
+    CASE WHEN hr.user_id IS NULL THEN 0 ELSE 1 END AS readFlag
+  FROM handoffs h
+  JOIN users u
+    ON u.id = h.created_by
+  LEFT JOIN handoff_reads hr
+    ON hr.handoff_id = h.id
+   AND hr.user_id = #{userId}
+  WHERE h.id = #{id}
+</select>
   
 </mapper>

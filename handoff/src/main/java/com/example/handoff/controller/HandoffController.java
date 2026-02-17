@@ -5,6 +5,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,6 +35,7 @@ public class HandoffController {
 	public String list(Model model) {
 		String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
 		Long userId = userMapper.selectIdByLoginId(loginId);
+		model.addAttribute("loginUserId", userId);
 		model.addAttribute("handoffs", handoffMapper.selectAll(userId));
 		return "handoff/list";
 	}
@@ -96,6 +98,9 @@ public class HandoffController {
 	    if (updated == 0) {
 	        return "redirect:/handoff?forbidden";
 	    }
+	    
+	    handoffReadMapper.deleteByHandoffId(id);
+	    
 	    return "redirect:/handoff";
 	}
 
@@ -108,6 +113,32 @@ public class HandoffController {
 	        return "redirect:/handoff?forbidden";
 	    }
 	    return "redirect:/handoff";
+	}
+	
+	@GetMapping("/handoff/{id}")
+	public String show(@PathVariable Long id, Model model, Authentication auth) {
+	    Long userId = userMapper.selectIdByLoginId(auth.getName());
+
+	    var handoff = handoffMapper.selectByIdWithReadFlag(id, userId);
+	    if (handoff == null) {
+	        return "redirect:/handoff";
+	    }
+
+	    model.addAttribute("handoff", handoff);
+	    model.addAttribute("loginUserId", userId);
+	    return "handoff/show";
+	}
+	
+	@ModelAttribute
+	public void addLoginUserName(Model model, Authentication auth) {
+	    if (auth != null && auth.isAuthenticated()) {
+	        String loginId = auth.getName();
+	        var user = userMapper.selectByLoginId(loginId);
+	        if (user != null) {
+	            model.addAttribute("loginUserName", user.getDisplayName());
+	            model.addAttribute("loginUserId", user.getId());
+	        }
+	    }
 	}
 
 }

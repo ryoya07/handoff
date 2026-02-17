@@ -47,4 +47,8 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
+
+	public boolean isDeleted() {
+		return false;
+	}
 }

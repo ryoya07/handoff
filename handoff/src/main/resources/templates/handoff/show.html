@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${handoff.title}">詳細</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body { background:#0f1115; font-family:"Meiryo","メイリオ",sans-serif; }
+    .navbar { background:#151922; border-bottom:1px solid rgba(255,255,255,.08); }
+    .card { background:#151922; border:1px solid rgba(255,255,255,.08); }
+    .text-muted { color: rgba(255,255,255,.65) !important; }
+    .page-title {
+      color: rgba(255,255,255,.95);
+      font-weight: 900;
+      letter-spacing: .4px;
+    }
+
+    .content-box {
+      background: #0f1115;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 18px;
+      white-space: pre-wrap;   /* 改行を保持 */
+      line-height: 1.85;
+      font-size: 1.05rem;
+      color: rgba(255,255,255,.92);
+    }
+
+    .badge-read { background:#6c757d; }
+    .badge-unread { background:#198754; font-weight:600; letter-spacing:.3px; }
+  </style>
+</head>
+
+<body class="text-light">
+
+<div th:replace="fragments/header :: header(true, false, false, true)"></div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10 col-xl-9">
+
+      <div class="card rounded-4 shadow-sm">
+        <div class="card-body p-4 p-md-5">
+
+          <!-- ヘッダー（タイトル + メタ + 状態） -->
+          <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+            <div>
+              <div class="page-title h2 mb-2" th:text="${handoff.title}">タイトル</div>
+              <div class="text-muted">
+                <span th:text="${handoff.createdByName}">作成者</span>
+                <span class="mx-2">•</span>
+                <span th:text="${#temporals.format(handoff.createdAt, 'yyyy-MM-dd HH:mm')}">日時</span>
+              </div>
+            </div>
+
+            <div class="text-end">
+              <span th:if="${handoff.readFlag == 1}" class="badge badge-read rounded-pill px-3 py-2">
+                既読
+              </span>
+              <span th:unless="${handoff.readFlag == 1}" class="badge badge-unread rounded-pill px-3 py-2">
+                未読
+              </span>
+            </div>
+          </div>
+
+          <!-- 本文 -->
+          <div class="content-box" th:text="${handoff.content}">内容</div>
+
+          <!-- 下部アクション -->
+          <div class="d-flex justify-content-end mt-4">
+            <form th:if="${handoff.readFlag != 1}"
+                  th:action="@{/handoff/{id}/read(id=${handoff.id})}"
+                  method="post" class="m-0">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+              <button class="btn btn-success btn-lg px-4">既読にする</button>
+            </form>
+
+            <span th:if="${handoff.readFlag == 1}" class="text-muted align-self-center">
+              既読済み
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

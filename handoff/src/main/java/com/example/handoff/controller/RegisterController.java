@@ -1,5 +1,6 @@
 package com.example.handoff.controller;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,22 +22,29 @@ public class RegisterController {
     }
 
     @GetMapping("/register")
-    public String showForm() {
+    public String showForm(Model model) {
+        if (!model.containsAttribute("loginId")) model.addAttribute("loginId", "");
+        if (!model.containsAttribute("displayName")) model.addAttribute("displayName", "");
         return "handoff/register";
     }
 
     @PostMapping("/register")
     public String register(
-        @RequestParam String loginId,
-        @RequestParam String displayName,
-        @RequestParam String password,
-        Model model
+            @RequestParam String loginId,
+            @RequestParam String displayName,
+            @RequestParam String password,
+            Model model
     ) {
 
-        String passwordHash = passwordEncoder.encode(password);
-
-        userMapper.insertUser(loginId, displayName, passwordHash);
-
-        return "redirect:/login";
+        try {
+            String passwordHash = passwordEncoder.encode(password);
+            userMapper.insertUser(loginId, displayName, passwordHash);
+            return "redirect:/login?registered";
+        } catch (DuplicateKeyException e) {
+            model.addAttribute("error", "そのログインIDは既に使われています。別のIDにしてください。");
+            model.addAttribute("loginId", loginId);
+            model.addAttribute("displayName", displayName);
+            return "handoff/register";
+        }
     }
 }

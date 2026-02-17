@@ -13,6 +13,7 @@ public class HandoffView {
 	private LocalDateTime createdAt;
     private int readFlag;              // 0:未読 / 1:既読
     private java.time.LocalDateTime readAt;      // 既読日時（未読ならnull）
+    private Long createdById;        // 追加：投稿者のログインID
 	
 	public Long getId() {
 		return id;
@@ -70,5 +71,11 @@ public class HandoffView {
 		this.readAt = readAt;
 	}
 	
-
+	public Long getCreatedById() {
+		return createdById;
+	}
+	
+	public void setCreatedById(Long createdById) {
+		this.createdById = createdById;
+	}
 }

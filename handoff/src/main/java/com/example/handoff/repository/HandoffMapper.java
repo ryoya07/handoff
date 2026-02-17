@@ -10,24 +10,37 @@ import com.example.handoff.domain.view.HandoffView;
 
 @Mapper
 public interface HandoffMapper {
-	//List<HandoffView> selectAll();
-
-	HandoffEdit selectByID(@Param("id") Long id);
 	
-	//更新機能
-	int updateByIdAndUserId(
-			@Param("id") Long id,
-			@Param("title") String title,
-			@Param("content") String content,
-			@Param("userId") Long userId
-		);
-	
-	//削除機能
 	int insert(
 	    @Param("title") String title,
 	    @Param("content") String content,
 	    @Param("createdBy") Long createdBy
 		);
+	
+    // 既存：一覧
+    // List<HandoffView> selectAll(@Param("userId") Long userId);
+
+    // ★編集画面用：1件取得（投稿者IDも取る）
+    HandoffEdit selectById(@Param("id") Long id);
+
+    // ★更新（投稿者本人のみ更新できるよう WHERE に created_by）
+    int updateByIdAndUserId(
+        @Param("id") Long id,
+        @Param("title") String title,
+        @Param("content") String content,
+        @Param("userId") Long userId
+    );
+
+    // ★削除（投稿者本人のみ削除できるよう WHERE に created_by）
+    int deleteByIdAndUserId(
+        @Param("id") Long id,
+        @Param("userId") Long userId
+    );
+    
+    HandoffView selectByIdWithReadFlag(
+    	    @Param("id") Long id,
+    	    @Param("userId") Long userId
+    );
 
 List<HandoffView> selectAll(@Param("loginUserId") Long loginUserId);
 

@@ -11,29 +11,74 @@
       login_id AS loginId,
       password_hash AS passwordHash,
       display_name AS displayName,
-      role
+      role,
+      is_deleted AS deleted,
+      deleted_at AS deletedAt
     FROM users
     WHERE login_id = #{loginId}
+      AND is_deleted = 0
   </select>
+
   <select id="selectIdByLoginId" resultType="long">
-	  SELECT id
-	  FROM users
-	  WHERE login_id = #{loginId}
-  </select> 
-  
+    SELECT id
+    FROM users
+    WHERE login_id = #{loginId}
+      AND is_deleted = 0
+  </select>
+
+  <select id="selectById" resultType="com.example.handoff.domain.model.User">
+    SELECT
+      id,
+      login_id AS loginId,
+      password_hash AS passwordHash,
+      display_name AS displayName,
+      role,
+      is_deleted AS deleted,
+      deleted_at AS deletedAt
+    FROM users
+    WHERE id = #{id}
+  </select>
+
   <insert id="insertUser">
-	  INSERT INTO users (
-	    login_id,
-	    display_name,
-	    password_hash,
-	    created_at
-	  )
-	  VALUES (
-	    #{loginId},
-	    #{displayName},
-	    #{passwordHash},
-	    NOW()
-	  )
+    INSERT INTO users (
+      login_id,
+      display_name,
+      password_hash,
+      role,
+      is_deleted,
+      created_at
+    )
+    VALUES (
+      #{loginId},
+      #{displayName},
+      #{passwordHash},
+      'USER',
+      0,
+      NOW()
+    )
   </insert>
+
+<update id="updateProfile">
+  UPDATE users
+  SET
+    display_name = #{displayName}
+  WHERE id = #{id}
+</update>
+
+  <update id="updatePasswordHash">
+    UPDATE users
+    SET password_hash = #{passwordHash}
+    WHERE id = #{id}
+      AND is_deleted = 0
+  </update>
+
+  <update id="softDelete">
+    UPDATE users
+    SET
+      is_deleted = 1,
+      deleted_at = CURRENT_TIMESTAMP
+    WHERE id = #{id}
+      AND is_deleted = 0
+  </update>
   
 </mapper>

@@ -9,4 +9,12 @@ public interface HandoffReadMapper {
 		@Param("handoffId") Long handoffId,
 		@Param("userId") Long userId
 	);
+	
+	int resetReadByHandoffId(
+		    @Param("handoffId") Long handoffId
+		);
+	
+	int deleteByHandoffId(
+		    @Param("handoffId") Long handoffId
+		);
 }
