@@ -24,6 +24,7 @@ public class AccountController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    // アカウント編集画面はログインユーザのみアクセス可能。ユーザの表示名を変更できるようにする。
     @GetMapping("/edit")
     public String editForm(Model model, Authentication auth) {
 
@@ -43,17 +44,19 @@ public class AccountController {
         return "redirect:/account/edit?success";
     }
     
+    // パスワード変更はログインユーザのみアクセス可能。新しいパスワードと確認用のパスワードを入力させ、両方が一致することを確認してから保存する。パスワードはハッシュ化して保存する。
     @PostMapping("/password")
     public String updatePassword(
             @RequestParam String newPassword,
             @RequestParam String newPasswordConfirm,
             Authentication auth
     ) {
+    	// パスワードと確認用パスワードが一致することを確認する。必要に応じて、パスワードの強度チェックも追加できる。
         if (!newPassword.equals(newPasswordConfirm)) {
             return "redirect:/account/edit?pw_mismatch";
         }
 
-        // 最低限のチェック（必要なら強化できる）
+        // 最低限のチェックとして、パスワードの長さが8文字以上であることを確認する。
         if (newPassword.length() < 8) {
             return "redirect:/account/edit?pw_short";
         }
@@ -65,6 +68,7 @@ public class AccountController {
         return "redirect:/account/edit?pw_success";
     }
     
+    // 退会処理はログインユーザのみアクセス可能。ユーザのアカウントを論理削除（ソフトデリート）する。退会後はセッションを無効化してログイン画面にリダイレクトする。
     @PostMapping("/withdraw")
     public String withdraw(Authentication auth) {
 

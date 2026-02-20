@@ -21,6 +21,7 @@ public class RegisterController {
         this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
+    // 登録画面は全ユーザがアクセス可能。
     @GetMapping("/register")
     public String showForm(Model model) {
         if (!model.containsAttribute("loginId")) model.addAttribute("loginId", "");
@@ -28,6 +29,7 @@ public class RegisterController {
         return "handoff/register";
     }
 
+    // 登録処理は全ユーザがアクセス可能。登録後はログイン画面にリダイレクトする。
     @PostMapping("/register")
     public String register(
             @RequestParam String loginId,
@@ -36,6 +38,7 @@ public class RegisterController {
             Model model
     ) {
 
+    	// パスワードはハッシュ化して保存する。ログインIDはユニーク制約があるため、重複するIDで登録しようとした場合はエラーメッセージを表示する。
         try {
             String passwordHash = passwordEncoder.encode(password);
             userMapper.insertUser(loginId, displayName, passwordHash);

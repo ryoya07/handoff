@@ -1,7 +1,7 @@
 package com.example.handoff.domain;
 
 import java.time.LocalDateTime;
-
+// DTOクラス。Handoffエンティティの内容を編集するためのクラス。Handoffエンティティと同じフィールドを持ち、ゲッターとセッターを定義する。
 public class HandoffEdit {
     private Long id;
     private String title;

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.handoff.domain.model.User;
 
+// ユーザ情報を管理するテーブルへのアクセスを行うMapper。Userテーブルは、ユーザのログインID、表示名、パスワードハッシュなどの情報を管理するためのテーブルで、主キーは id となる。
 @Mapper
 public interface UserMapper {
     Long selectIdByLoginId(@Param("loginId") String loginId);

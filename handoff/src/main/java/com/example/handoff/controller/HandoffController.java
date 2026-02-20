@@ -31,6 +31,7 @@ public class HandoffController {
 		this.handoffReadMapper = handoffReadMapper;
 	}
 	
+	// ハンドオフの一覧画面。ログインユーザのIDをもとに、ユーザが作成した投稿と他人が作成した投稿の両方を取得して表示する。
 	@GetMapping("/handoff")
 	public String list(Model model) {
 		String loginId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -40,11 +41,13 @@ public class HandoffController {
 		return "handoff/list";
 	}
 	
+	// 投稿作成は全ユーザがアクセス可能。
 	@GetMapping("/handoff/new")
 	public String newForm() {
 	    return "handoff/new";
 	}
 	
+	// 投稿作成は全ユーザがアクセス可能。投稿者のIDはセッションから取得して保存する。
 	@PostMapping("/handoff")
 	public String create(
 			@RequestParam String title,
@@ -60,6 +63,7 @@ public class HandoffController {
 		return "redirect:/handoff";
 	}
 	
+	// 投稿を既読にする。既読はユーザごとに管理されるため、ログインユーザのIDも渡す必要がある。
 	@PostMapping("/handoff/{id}/read")
 	public String markRead(@PathVariable Long id) {
 		String loinId = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -70,6 +74,7 @@ public class HandoffController {
 		return "redirect:/handoff";
 	}
 	
+	// 投稿編集は投稿者のみがアクセス可能。サーバ側でも投稿者チェックを行う。
 	@GetMapping("/handoff/{id}/edit")
 	public String editForm(@PathVariable Long id, Model model, Authentication auth) {
 	    Long userId = userMapper.selectIdByLoginId(auth.getName());
@@ -104,6 +109,7 @@ public class HandoffController {
 	    return "redirect:/handoff";
 	}
 
+	// 投稿削除も投稿者のみがアクセス可能。サーバ側でも投稿者チェックを行う。
 	@PostMapping("/handoff/{id}/delete")
 	public String delete(@PathVariable Long id, Authentication auth) {
 	    Long userId = userMapper.selectIdByLoginId(auth.getName());
@@ -115,6 +121,7 @@ public class HandoffController {
 	    return "redirect:/handoff";
 	}
 	
+	// 投稿の詳細画面。投稿者以外もアクセス可能。既読フラグはユーザごとに管理されるため、ログインユーザのIDも渡す必要がある。
 	@GetMapping("/handoff/{id}")
 	public String show(@PathVariable Long id, Model model, Authentication auth) {
 	    Long userId = userMapper.selectIdByLoginId(auth.getName());
@@ -129,6 +136,7 @@ public class HandoffController {
 	    return "handoff/show";
 	}
 	
+	// すべてのハンドオフ関連の画面でログインユーザの表示名を利用できるようにするため、@ModelAttributeで共通処理として追加する。
 	@ModelAttribute
 	public void addLoginUserName(Model model, Authentication auth) {
 	    if (auth != null && auth.isAuthenticated()) {

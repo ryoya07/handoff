@@ -37,11 +37,13 @@ public interface HandoffMapper {
         @Param("userId") Long userId
     );
     
+    // ★既読フラグも含めて1件取得（投稿者IDは不要）
     HandoffView selectByIdWithReadFlag(
     	    @Param("id") Long id,
     	    @Param("userId") Long userId
     );
 
+    // ★一覧取得も既読フラグを含める（投稿者IDは不要）
 List<HandoffView> selectAll(@Param("loginUserId") Long loginUserId);
 
 }

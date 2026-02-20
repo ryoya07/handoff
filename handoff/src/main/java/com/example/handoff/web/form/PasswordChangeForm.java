@@ -15,7 +15,6 @@ public class PasswordChangeForm {
 	@NotBlank
 	private String newPasswordConfirm;
 	
-	//getter/setter
 	public String getCurrentPassword() {
 		return currentPassword;
 	}
