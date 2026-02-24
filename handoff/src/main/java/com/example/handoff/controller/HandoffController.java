@@ -89,7 +89,8 @@ public class HandoffController {
 	    model.addAttribute("handoff", handoff);
 	    return "handoff/edit";
 	}
-
+	
+	// 投稿編集は投稿者のみがアクセス可能。サーバ側でも投稿者チェックを行う。更新後は投稿の詳細画面にリダイレクトする。
 	@PostMapping("/handoff/{id}/edit")
 	public String update(
 	    @PathVariable Long id,

@@ -34,7 +34,7 @@ public class AccountController {
         model.addAttribute("user", user);
         return "account/edit";
     }
-
+    // プロフィール更新はログインユーザのみアクセス可能。ユーザの表示名を更新する。更新後はアカウント編集画面にリダイレクトする。
     @PostMapping("/edit")
     public String updateProfile(@RequestParam String displayName, Authentication auth) {
 

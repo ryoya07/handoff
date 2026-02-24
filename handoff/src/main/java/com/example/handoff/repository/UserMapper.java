@@ -28,6 +28,8 @@ public interface UserMapper {
         @Param("id") Long id,
         @Param("passwordHash") String passwordHash
     );
+    
+    
 
     int softDelete(@Param("id") Long id);
 }
